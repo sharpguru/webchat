@@ -1,7 +1,11 @@
 var socket = require('socket.io-client')('http://localhost:1337');
 
 socket.on('connect', function(){
-  console.log('connected');
+});
+
+socket.on('connected', function(msg){
+  console.log(msg);
+  prompt();
 });
 
 socket.on('chat', function(msg){
@@ -22,9 +26,9 @@ const rl = readline.createInterface({
 function prompt() {
   rl.question('> ', (msg) => {
     socket.emit('chat', msg);
-    rl.close();
+    //rl.close();
     prompt();
   });
 }
 
-prompt();
+//prompt();
