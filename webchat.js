@@ -1,10 +1,12 @@
 var socket = require('socket.io-client')('http://localhost:1337');
+var connectionid = '';
 
 socket.on('connect', function(){
 });
 
-socket.on('connected', function(msg){
+socket.on('connected', function(msg, id){
   console.log(msg);
+  connectionid = id;
   prompt();
 });
 
@@ -41,7 +43,48 @@ function prompt() {
       //console.log(space);
       //console.log(data);
       //console.log(cmd);
-      socket.emit(cmd, data);
+
+      // check for local commands
+      if ("share" == cmd.toLowerCase()) {
+        var arr = data.split(' ');
+        var localpath = arr[0];
+        var sharename = arr[1];
+
+        if (!localpath || !sharename) {
+          // list shares
+          socket.emit('share', '');
+        } else {
+          console.log('setting share');
+
+          // Set share
+
+          // validate localpath
+          //var myFileURL = new URL('file://C:/data'); // maybe someday
+          // TODO: Add support for windows drive letters and absolute urls
+          var pathname = path.join(__dirname, localpath);
+          console.log(pathname);
+          fs.access(pathname, (err) => {
+            if (err) {
+              if (err.code === 'ENOENT') {
+                console.error('path does not exist');
+              }
+            } else {
+              var share = {
+                name: sharename,
+                path: localpath,
+                userid: id
+              }; // TODO: Replace user id with more permanent user public key
+
+              //db.get('shares').push(share).write();
+              //socket.emit('returnmessage', 'share added!');
+              socket.emit('share', share);
+            }
+          });
+        }
+
+      } else { // send remote command
+        socket.emit(cmd, data);
+      }
     } else {
       socket.emit('chat', msg);
     }
