@@ -59,6 +59,9 @@ function prompt() {
         case "share":
           commandShare(data);
           break;
+        case "whisper":
+          commandWhisper(data);
+          break;
         default :
           socket.emit(cmd, data);
           break;
@@ -136,6 +139,21 @@ function commandShare(data) {
         socket.emit('share', share);
       }
     });
+  }
+}
+
+function commandWhisper(data) {
+  if (data) {
+    var arr = data.split(' ');
+    var idto = arr[0];
+    var msg = arr[1];
+
+    var secretmsg = {
+      idto: idto,
+      msg: msg
+    };
+
+    socket.emit('whisper', secretmsg);
   }
 }
 
