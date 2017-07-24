@@ -17,27 +17,27 @@ socket.on('connect', function(){
 });
 
 socket.on('connected', function(msg, id){
-  console.log(msg);
+  if (msg) console.log(msg);
   connectionid = id;
 
   var config = db.get('config[0]').value();
 
-  console.log("registering as: ");
-  console.log(config.user);
+  // console.log("registering as: ");
+  // console.log(config.user);
   socket.emit('register', config.user);
 
   prompt();
 });
 
 socket.on('chat', function(msg){
-  console.log(msg);
+  if (msg) console.log(msg);
   prompt();
 });
 
 socket.on('registered', function(currentUser){
   currentUser = currentUser;
 
-  console.log(currentUser);
+  //console.log(currentUser);
 
   console.log('Registered as ' + currentUser.name);
 
@@ -46,10 +46,12 @@ socket.on('registered', function(currentUser){
   db.get('config[0]')
     .assign({user: currentUser})
     .write();
+
+    prompt();
 });
 
 socket.on('returnmessage', function(msg){
-    console.log(msg);
+    if (msg) console.log(msg);
     prompt();
 });
 
