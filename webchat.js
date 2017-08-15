@@ -192,3 +192,5 @@ function commandWhisper(data) {
 }
 
 //prompt();
+
+module.exports = socket;
