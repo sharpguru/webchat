@@ -22,11 +22,11 @@ socket.on('connected', function(msg, id){
 
   var config = db.get('config[0]').value();
 
-  // console.log("registering as: ");
-  // console.log(config.user);
+  console.log("registering as: ");
+  console.log(config.user);
   socket.emit('register', config.user);
 
-  prompt();
+  //prompt();
 });
 
 socket.on('chat', function(msg){
@@ -34,8 +34,8 @@ socket.on('chat', function(msg){
   prompt();
 });
 
-socket.on('registered', function(currentUser){
-  currentUser = currentUser;
+socket.on('registered', function(registeredUser){
+  currentUser = registeredUser;
 
   //console.log(currentUser);
 
@@ -69,7 +69,12 @@ const rl = readline.createInterface({
 });
 
 function prompt() {
-  rl.question('> ', (msg) => {
+  var prompttext = (currentUser && currentUser.name) ? currentUser.name : '';
+  prompttext += '> ';
+
+  console.log(currentUser);
+
+  rl.question(prompttext, (msg) => {
 
     if (msg.startsWith('.')) {
       // find first space
