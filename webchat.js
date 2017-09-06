@@ -1,4 +1,4 @@
-var socket = require('socket.io-client')('http://localhost:1337');
+// var socket = require('socket.io-client')('http://localhost:1337');
 var fs = require('fs');
 var path = require('path');
 var connectionid = '';
@@ -6,6 +6,14 @@ var currentDir = __dirname;
 var currentUser;
 var low = require('lowdb');
 var config;
+
+console.log(process.argv[2]);
+
+var hosturl = (process.argv.length > 2)
+  ? process.argv[2].replace('"','') : 'http://localhost:1337';
+var socket = require('socket.io-client')(hosturl);
+
+console.log('connecting to: ' + hosturl);
 
 // database
 const db = low('clientdb.json');
